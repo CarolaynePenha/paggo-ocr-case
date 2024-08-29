@@ -47,6 +47,7 @@ model Invoice {
   textRaw                String
   imageLink              String
   imageName              String
+  number                 String
   totalAmount            Float
   netAmount              Float
   issuanceDate           String
