@@ -28,15 +28,17 @@ model Session {
 }
 
 model Company {
-  id          Int      @id @default(autoincrement())
-  createdAt   DateTime @default(now())
-  name        String
-  cpfCnpj     String
-  address     String
-  phoneNumber Int
-  city        String
-  state       String
-  email       String
+  id              Int       @id @default(autoincrement())
+  createdAt       DateTime  @default(now())
+  name            String?
+  cpfCnpj         String?   @unique
+  address         String?
+  phoneNumber     String?
+  city            String?
+  state           String?
+  email           String?   @unique
+  InvoicePayer    Invoice[] @relation("Payer")
+  InvoiceReceiver Invoice[] @relation("Receiver")
 
   @@map("companies")
 }
@@ -45,14 +47,18 @@ model Invoice {
   id                     Int      @id @default(autoincrement())
   createdAt              DateTime @default(now())
   textRaw                String
-  imageLink              String
-  imageName              String
-  number                 String
-  totalAmount            Float
-  netAmount              Float
-  issuanceDate           String
-  description            String
-  bankingInfoDescription String
+  imageLink              String   @unique
+  imageName              String   @unique
+  number                 String?
+  totalAmount            Int?
+  netAmount              Int?
+  issuanceDate           String?
+  description            String?
+  bankingInfoDescription String?
+  payerId                Int
+  payer                  Company  @relation("Payer", fields: [payerId], references: [id])
+  receiverId             Int
+  receiver               Company  @relation("Receiver", fields: [receiverId], references: [id])
 
   @@map("invoices")
 }
