@@ -43,22 +43,35 @@ model Company {
   @@map("companies")
 }
 
+model BankInfo {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  bankName  String?
+  agency    String?
+  account   String?
+  pixKey    String?
+  Invoice   Invoice[]
+
+  @@map("bankInfos")
+}
+
 model Invoice {
-  id                     Int      @id @default(autoincrement())
-  createdAt              DateTime @default(now())
-  textRaw                String
-  imageLink              String   @unique
-  imageName              String   @unique
-  number                 String?
-  totalAmount            Int?
-  netAmount              Int?
-  issuanceDate           String?
-  description            String?
-  bankingInfoDescription String?
-  payerId                Int
-  payer                  Company  @relation("Payer", fields: [payerId], references: [id])
-  receiverId             Int
-  receiver               Company  @relation("Receiver", fields: [receiverId], references: [id])
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now())
+  textRaw      String
+  imageLink    String   @unique
+  imageName    String   @unique
+  number       String?
+  totalAmount  Int?
+  netAmount    Int?
+  issuanceDate String?
+  description  String?
+  bankInfoId   Int
+  bankInfo     BankInfo @relation(fields: [bankInfoId], references: [id])
+  payerId      Int
+  payer        Company  @relation("Payer", fields: [payerId], references: [id])
+  receiverId   Int
+  receiver     Company  @relation("Receiver", fields: [receiverId], references: [id])
 
   @@map("invoices")
 }
