@@ -20,7 +20,6 @@ export class OcrService {
         imageLink: process.env.AWS_URL_SAVED_INVOICE + uniqueName,
         imageName: uniqueName,
       };
-      console.log('invoiceLink: ', invoice.imageLink);
 
       const payerData = {
         ...parseResponseOpenAi.payerData,

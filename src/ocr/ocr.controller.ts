@@ -12,7 +12,6 @@ export class OcrController {
     @Body()
     { uniqueName, userName, email }: ReqInfos,
   ) {
-    console.log('uniqueName: ', uniqueName);
     const response = this.ocrService.handleInvoce({
       uniqueName,
       userName,
