@@ -1,5 +1,6 @@
 import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { OcrService } from './ocr.service';
+import { ReqInfos } from './ocr.interfaces';
 
 @Controller('ocr')
 export class OcrController {
@@ -7,9 +8,16 @@ export class OcrController {
 
   @Post()
   @HttpCode(201)
-  postInvoceImage(@Body() { uniqueName }: { uniqueName: string }) {
+  postInvoceImage(
+    @Body()
+    { uniqueName, userName, email }: ReqInfos,
+  ) {
     console.log('uniqueName: ', uniqueName);
-    const response = this.ocrService.handleInvoce(uniqueName);
+    const response = this.ocrService.handleInvoce({
+      uniqueName,
+      userName,
+      email,
+    });
     return response;
   }
 }

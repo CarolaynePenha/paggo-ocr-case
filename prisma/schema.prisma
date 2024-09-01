@@ -12,19 +12,9 @@ model User {
   createdAt DateTime  @default(now())
   name      String
   email     String    @unique
-  session   Session[]
+  Invoice   Invoice[]
 
   @@map("users")
-}
-
-model Session {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  token     String
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id])
-
-  @@map("sessions")
 }
 
 model Company {
@@ -56,22 +46,24 @@ model BankInfo {
 }
 
 model Invoice {
-  id           Int      @id @default(autoincrement())
-  createdAt    DateTime @default(now())
+  id           Int       @id @default(autoincrement())
+  createdAt    DateTime  @default(now())
   textRaw      String
-  imageLink    String   @unique
-  imageName    String   @unique
+  imageLink    String    @unique
+  imageName    String    @unique
   number       String?
   totalAmount  Int?
   netAmount    Int?
   issuanceDate String?
   description  String?
-  bankInfoId   Int
-  bankInfo     BankInfo @relation(fields: [bankInfoId], references: [id])
+  bankInfoId   Int?
+  bankInfo     BankInfo? @relation(fields: [bankInfoId], references: [id])
   payerId      Int
-  payer        Company  @relation("Payer", fields: [payerId], references: [id])
+  payer        Company   @relation("Payer", fields: [payerId], references: [id])
   receiverId   Int
-  receiver     Company  @relation("Receiver", fields: [receiverId], references: [id])
+  receiver     Company   @relation("Receiver", fields: [receiverId], references: [id])
+  userId       Int
+  user         User      @relation(fields: [userId], references: [id])
 
   @@map("invoices")
 }

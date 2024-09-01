@@ -2,13 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { S3, Textract } from 'aws-sdk';
 import { OcrRepository } from './ocr.repository';
 import OpenAI from 'openai';
-import { OpenAiResponse } from './ocr.interfaces';
+import { OpenAiResponse, ReqInfos } from './ocr.interfaces';
 
 @Injectable()
 export class OcrService {
   constructor(private ocrRepository: OcrRepository) {}
 
-  async handleInvoce(uniqueName: string) {
+  async handleInvoce({ uniqueName, userName, email }: ReqInfos) {
+    const userInfos = { userName, email };
     try {
       const textDetected = await this.detectText(uniqueName);
       const responseOpenAi = await this.structuredData(textDetected);
@@ -35,8 +36,9 @@ export class OcrService {
         payerData,
         receiverData,
         bankInfo,
+        userInfos,
       );
-      return { invoice, payerData, receiverData };
+      return { invoice, payerData, receiverData, bankInfo };
     } catch (error) {
       console.log('Error on invoice handler:', error);
       throw error;

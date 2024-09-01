@@ -1,6 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { CreateBankInfo, CreateCompany, CreateInvoice } from './ocr.interfaces';
+import {
+  CreateBankInfo,
+  CreateCompany,
+  CreateInvoice,
+  ReqInfos,
+} from './ocr.interfaces';
 
 @Injectable()
 export class OcrRepository {
@@ -11,7 +16,14 @@ export class OcrRepository {
     payerData: CreateCompany,
     receiverData: CreateCompany,
     bankInfo: CreateBankInfo,
+    userInfo: ReqInfos,
   ) {
+    const shouldCreateBankInfo =
+      bankInfo.bankName ||
+      bankInfo.account ||
+      bankInfo.agency ||
+      bankInfo.pixKey;
+
     await this.prisma.invoice.create({
       data: {
         ...invoiceInfos,
@@ -27,8 +39,16 @@ export class OcrRepository {
             create: receiverData,
           },
         },
-        bankInfo: {
-          create: bankInfo,
+        ...(shouldCreateBankInfo && {
+          bankInfo: {
+            create: bankInfo,
+          },
+        }),
+        user: {
+          connectOrCreate: {
+            where: { email: userInfo.email },
+            create: { name: userInfo.userName, email: userInfo.email },
+          },
         },
       },
     });
