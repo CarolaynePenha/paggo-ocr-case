@@ -1,0 +1,23 @@
+services:
+  postgres_paggo_ocr_case_db:
+    image: postgres
+    container_name: postgres_paggo_ocr_case_db
+    restart: always
+    ports:
+      - 5432:5432
+    env_file:
+      - .env
+    volumes:
+      - pg_paggo-ocr-case-db:/var/lib/postgresql/data
+  node_paggo_ocr_case_app:
+    container_name: node_paggo_ocr_case_app
+    build: .
+    ports:
+      - 80:5500
+    depends_on:
+      - postgres_paggo_ocr_case_db
+    env_file:
+      - .env
+
+volumes:
+  pg_paggo-ocr-case-db:

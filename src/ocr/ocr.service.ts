@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { S3, Textract } from 'aws-sdk';
+import { Textract } from '@aws-sdk/client-textract';
 import { OcrRepository } from './ocr.repository';
 import OpenAI from 'openai';
 import { OpenAiResponse, ReqInfos } from './ocr.interfaces';
@@ -55,7 +55,7 @@ export class OcrService {
           },
         },
       };
-      const data = await textract.detectDocumentText(params).promise();
+      const data = await textract.detectDocumentText(params);
       let text = '';
 
       for (const item of data.Blocks) {
